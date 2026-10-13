@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PITCHBOARD - Fiche Équipe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --success: #16a34a;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            background: #ffffff;
+            padding: 10px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .site-logo {
+            height: 44px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .site-logo:hover { transform: scale(1.04); }
+
+        .site-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        nav.main-nav {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+            gap: 4px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 9px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: #64748b;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #0f172a;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .nav-link.active {
+            background: #ffffff;
+            color: #2563eb;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+        }
+
+        .nav-link.active svg { fill: #2563eb; }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(220, 252, 231, 0.8);
+            border: 1px solid rgba(187, 247, 208, 0.8);
+            color: #16a34a;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .pulse {
+            width: 7px;
+            height: 7px;
+            background-color: #16a34a;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5); }
+            70% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+        }
+
+        .team-banner {
+            background: var(--card-bg);
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .team-banner { flex-direction: column; text-align: center; }
+        }
+
+        .team-crest {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+        }
+
+        .team-info-main h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0 0 8px 0;
+        }
+
+        .team-details-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .team-detail-item strong { color: var(--primary); }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-color: #f1f5f9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        tr:hover { background-color: #f8fafc; }
+
+        .pos-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-brand">
+            <img src="logo.jpg" alt="PITCHBOARD Logo" class="site-logo">
+            <h1 class="site-title">PITCHBOARD</h1>
+        </div>
+
+        <div class="header-right">
+            <nav class="main-nav">
+                <a href="/" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/schedule" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                    <span>Calendrier</span>
+                </a>
+                <a href="/teams" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span>Équipes</span>
+                </a>
+            </nav>
+
+            <div class="live-badge">
+                <div class="pulse"></div>
+                <span>En direct</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="team-banner" id="team-banner">
+        <p style="color: var(--text-muted);">Chargement du club...</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Effectif Officiel</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Joueur</th>
+                    <th>Poste</th>
+                    <th>Nationalité</th>
+                </tr>
+            </thead>
+            <tbody id="squad-body">
+                <tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 20px;">Chargement des joueurs...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function translatePosition(pos) {
+            if (!pos) return 'N/C';
+            const positions = {
+                'Goalkeeper': 'Gardien',
+                'Defence': 'Défenseur',
+                'Defender': 'Défenseur',
+                'Central Back': 'Défenseur Central',
+                'Centre-Back': 'Défenseur Central',
+                'Left-Back': 'Arrière Gauche',
+                'Right-Back': 'Arrière Droit',
+                'Midfield': 'Milieu',
+                'Midfielder': 'Milieu',
+                'Central Midfield': 'Milieu Central',
+                'Defensive Midfield': 'Milieu Défensif',
+                'Attacking Midfield': 'Milieu Offensif',
+                'Offence': 'Attaquant',
+                'Forward': 'Attaquant',
+                'Centre-Forward': 'Avant-Centre',
+                'Left Winger': 'Ailier Gauche',
+                'Right Winger': 'Ailier Droit'
+            };
+            return positions[pos] || pos;
+        }
+
+        function translateNationality(nat) {
+            if (!nat) return 'N/C';
+            const countries = {
+                'France': 'France 🇫🇷',
+                'Brazil': 'Brésil 🇧🇷',
+                'Argentina': 'Argentine 🇦🇷',
+                'Portugal': 'Portugal 🇵🇹',
+                'Spain': 'Espagne 🇪🇸',
+                'Germany': 'Allemagne 🇩🇪',
+                'Italy': 'Italie 🇮🇹',
+                'England': 'Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+                'Belgium': 'Belgique 🇧🇪',
+                'Netherlands': 'Pays-Bas 🇳🇱',
+                'Ivory Coast': 'Côte d\'Ivoire 🇨🇮',
+                'Senegal': 'Sénégal 🇸🇳',
+                'Morocco': 'Maroc 🇲🇦',
+                'Algeria': 'Algérie 🇩🇿',
+                'Tunisia': 'Tunisie 🇹🇳',
+                'Cameroon': 'Cameroun 🇨🇲',
+                'Mali': 'Mali 🇲🇱',
+                'Nigeria': 'Nigéria 🇳🇬',
+                'Ghana': 'Ghana 🇬🇭',
+                'Japan': 'Japon 🇯🇵',
+                'South Korea': 'Corée du Sud 🇰🇷',
+                'Switzerland': 'Suisse 🇨🇭',
+                'Croatia': 'Croatie 🇭🇷',
+                'Uruguay': 'Uruguay 🇺🇾',
+                'Colombia': 'Colombie 🇨🇴',
+                'United States': 'États-Unis 🇺🇸',
+                'Canada': 'Canada 🇨🇦'
+            };
+            return countries[nat] || nat;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const teamId = urlParams.get('id');
+
+        async function fetchTeamDetails() {
+            if (!teamId) {
+                document.getElementById('team-banner').innerHTML = '<p style="color: var(--danger);">Aucune équipe sélectionnée.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/teams/${teamId}`);
+                if (!response.ok) throw new Error('Erreur réseau');
+
+                const team = await response.json();
+
+                const banner = document.getElementById('team-banner');
+                const coachName = team.coach && team.coach.name ? team.coach.name : 'Non renseigné';
+                
+                banner.innerHTML = `
+                    <img src="${team.crest}" alt="${team.name}" class="team-crest">
+                    <div class="team-info-main">
+                        <h2>${team.name}</h2>
+                        <div class="team-details-grid">
+                            <div class="team-detail-item">Stade : <strong>${team.venue || 'N/C'}</strong></div>
+                            <div class="team-detail-item">Fondé en : <strong>${team.founded || 'N/C'}</strong></div>
+                            <div class="team-detail-item">Entraîneur : <strong>👔 ${coachName}</strong></div>
+                        </div>
+                    </div>
+                `;
+
+                const squad = team.squad || [];
+                const tbody = document.getElementById('squad-body');
+                tbody.innerHTML = '';
+
+                if (squad.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px;">Aucun joueur trouvé dans l\'effectif.</td></tr>';
+                    return;
+                }
+
+                squad.forEach(player => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${player.name}</strong></td>
+                        <td><span class="pos-badge">${translatePosition(player.position)}</span></td>
+                        <td>${translateNationality(player.nationality)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (error) {
+                console.error('Erreur chargement équipe :', error);
+            }
+        }
+
+        fetchTeamDetails();
+    </script>
+
+</body>
+</html>

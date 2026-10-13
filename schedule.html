@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PITCHBOARD - Calendrier Ligue 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            background: #ffffff;
+            padding: 10px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .site-logo {
+            height: 44px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .site-logo:hover { transform: scale(1.04); }
+
+        .site-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        nav.main-nav {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+            gap: 4px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 9px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: #64748b;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #0f172a;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .nav-link.active {
+            background: #ffffff;
+            color: #2563eb;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+        }
+
+        .nav-link.active svg { fill: #2563eb; }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(220, 252, 231, 0.8);
+            border: 1px solid rgba(187, 247, 208, 0.8);
+            color: #16a34a;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .pulse {
+            width: 7px;
+            height: 7px;
+            background-color: #16a34a;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5); }
+            70% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+        }
+
+        /* Barre de contrôle du calendrier & titre pro */
+        .controls-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 16px 24px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .schedule-heading {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .matchday-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .matchday-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--accent);
+            margin: 0;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .btn-nav-matchday {
+            background: #f1f5f9;
+            border: 1px solid var(--border);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-nav-matchday:hover:not(:disabled) {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .btn-nav-matchday:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Grille des Matchs */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 12px;
+        }
+
+        .match-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .match-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            border-color: var(--accent);
+        }
+
+        .match-card-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .match-card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .team-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 40%;
+        }
+
+        .team-box.away {
+            justify-content: flex-end;
+            text-align: right;
+        }
+
+        .team-logo {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+        }
+
+        .team-name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .score-badge {
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--primary);
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .status-live { color: var(--danger); font-weight: 700; }
+        .status-finished { color: var(--text-muted); }
+        .status-upcoming { color: var(--accent); }
+
+        @media (max-width: 650px) {
+            .controls-card { flex-direction: column; align-items: stretch; text-align: center; }
+            .matchday-nav { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-brand">
+            <img src="logo.jpg" alt="PITCHBOARD Logo" class="site-logo">
+            <h1 class="site-title">PITCHBOARD</h1>
+        </div>
+
+        <div class="header-right">
+            <nav class="main-nav">
+                <a href="/" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/schedule" class="nav-link active">
+                    <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                    <span>Calendrier</span>
+                </a>
+                <a href="/teams" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span>Équipes</span>
+                </a>
+            </nav>
+
+            <div class="live-badge">
+                <div class="pulse"></div>
+                <span>En direct</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Barre de contrôle avec titre élégant -->
+    <div class="controls-card">
+        <h2 class="schedule-heading">⚽ Calendrier L1 2026/2027</h2>
+        <div class="matchday-nav">
+            <button class="btn-nav-matchday" id="btn-prev" onclick="changeMatchday(-1)">◀ Précédente</button>
+            <h2 class="matchday-title" id="matchday-display">Journée --</h2>
+            <button class="btn-nav-matchday" id="btn-next" onclick="changeMatchday(1)">Suivante ▶</button>
+        </div>
+    </div>
+
+    <!-- Grille des Matchs -->
+    <div class="schedule-grid" id="schedule-container">
+        <p style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px;">Chargement du calendrier...</p>
+    </div>
+
+    <script>
+        let allMatches = [];
+        let currentMatchday = 1;
+        let maxMatchdays = 34;
+
+        function formatDate(utcStr) {
+            if (!utcStr) return '';
+            const d = new Date(utcStr);
+            return d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        }
+
+        async function fetchAllMatches() {
+            try {
+                const response = await fetch('/api/matches');
+                const data = await response.json();
+                allMatches = data.matches || [];
+
+                if (allMatches.length > 0) {
+                    const inPlayOrUpcoming = allMatches.find(m => m.status !== 'FINISHED');
+                    currentMatchday = inPlayOrUpcoming ? inPlayOrUpcoming.matchday : 1;
+                    maxMatchdays = Math.max(...allMatches.map(m => m.matchday || 34));
+                    renderMatchday();
+                }
+            } catch (err) {
+                console.error('Erreur calendrier :', err);
+            }
+        }
+
+        function changeMatchday(delta) {
+            const newDay = currentMatchday + delta;
+            if (newDay >= 1 && newDay <= maxMatchdays) {
+                currentMatchday = newDay;
+                renderMatchday();
+            }
+        }
+
+        function renderMatchday() {
+            document.getElementById('matchday-display').innerText = `Journée ${currentMatchday}`;
+            document.getElementById('btn-prev').disabled = currentMatchday <= 1;
+            document.getElementById('btn-next').disabled = currentMatchday >= maxMatchdays;
+
+            const container = document.getElementById('schedule-container');
+            const dayMatches = allMatches.filter(m => m.matchday === currentMatchday);
+
+            if (dayMatches.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center;">Aucun match trouvé pour cette journée.</p>';
+                return;
+            }
+
+            dayMatches.sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
+            container.innerHTML = '';
+
+            dayMatches.forEach(match => {
+                let scoreText = 'VS';
+                let statusLabel = 'À venir';
+                let statusClass = 'status-upcoming';
+
+                if (match.status === 'FINISHED') {
+                    scoreText = `${match.score.fullTime.home ?? 0} - ${match.score.fullTime.away ?? 0}`;
+                    statusLabel = 'Terminé';
+                    statusClass = 'status-finished';
+                } else if (['IN_PLAY', 'PAUSED'].includes(match.status)) {
+                    scoreText = `${match.score.fullTime.home ?? 0} - ${match.score.fullTime.away ?? 0}`;
+                    statusLabel = '🟢 EN DIRECT';
+                    statusClass = 'status-live';
+                }
+
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.innerHTML = `
+                    <div class="match-card-top">
+                        <span>${formatDate(match.utcDate)}</span>
+                        <span class="${statusClass}">${statusLabel}</span>
+                    </div>
+                    <div class="match-card-row">
+                        <div class="team-box">
+                            <img src="${match.homeTeam.crest}" alt="" class="team-logo">
+                            <span class="team-name" title="${match.homeTeam.name}">${match.homeTeam.shortName || match.homeTeam.name}</span>
+                        </div>
+                        <div class="score-badge">${scoreText}</div>
+                        <div class="team-box away">
+                            <span class="team-name" title="${match.awayTeam.name}">${match.awayTeam.shortName || match.awayTeam.name}</span>
+                            <img src="${match.awayTeam.crest}" alt="" class="team-logo">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        fetchAllMatches();
+    </script>
+
+</body>
+</html>

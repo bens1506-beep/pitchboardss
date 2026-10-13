@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PITCHBOARD - Équipes Ligue 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --success: #16a34a;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            background: #ffffff;
+            padding: 10px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .site-logo {
+            height: 44px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .site-logo:hover { transform: scale(1.04); }
+
+        .site-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        nav.main-nav {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+            gap: 4px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 9px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: #64748b;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #0f172a;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .nav-link.active {
+            background: #ffffff;
+            color: #2563eb;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+        }
+
+        .nav-link.active svg { fill: #2563eb; }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(220, 252, 231, 0.8);
+            border: 1px solid rgba(187, 247, 208, 0.8);
+            color: #16a34a;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .pulse {
+            width: 7px;
+            height: 7px;
+            background-color: #16a34a;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5); }
+            70% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+        }
+
+        .page-heading {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
+        }
+
+        .team-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            border-color: var(--accent);
+        }
+
+        .team-card-crest {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            margin-bottom: 6px;
+        }
+
+        .team-card-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--primary);
+            margin: 0 0 2px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .team-card-detail {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .btn-squad {
+            margin-top: 6px;
+            background: #eff6ff;
+            color: var(--accent);
+            border: 1px solid #bfdbfe;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .team-card:hover .btn-squad {
+            background: var(--accent);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-brand">
+            <img src="logo.jpg" alt="PITCHBOARD Logo" class="site-logo">
+            <h1 class="site-title">PITCHBOARD</h1>
+        </div>
+
+        <div class="header-right">
+            <nav class="main-nav">
+                <a href="/" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/schedule" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                    <span>Calendrier</span>
+                </a>
+                <a href="/teams" class="nav-link active">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span>Équipes</span>
+                </a>
+            </nav>
+
+            <div class="live-badge">
+                <div class="pulse"></div>
+                <span>En direct</span>
+            </div>
+        </div>
+    </header>
+
+    <h2 class="page-heading">Clubs de Ligue 1</h2>
+
+    <div class="teams-grid" id="teams-container">
+        <p style="text-align: center; grid-column: 1 / -1; color: var(--text-muted); padding: 40px;">Chargement des clubs...</p>
+    </div>
+
+    <script>
+        async function fetchTeams() {
+            try {
+                const response = await fetch('/api/teams');
+                if (!response.ok) throw new Error('Erreur réseau');
+
+                const data = await response.json();
+                const container = document.getElementById('teams-container');
+                const teams = data.teams || [];
+
+                if (teams.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">Aucun club trouvé.</p>';
+                    return;
+                }
+
+                container.innerHTML = '';
+
+                teams.forEach(team => {
+                    const venue = team.venue || 'Non renseigné';
+
+                    const card = document.createElement('div');
+                    card.className = 'team-card';
+                    card.onclick = () => window.location.href = `/team?id=${team.id}`;
+
+                    card.innerHTML = `
+                        <img src="${team.crest}" alt="${team.name}" class="team-card-crest">
+                        <h3 class="team-card-name" title="${team.name}">${team.shortName || team.name}</h3>
+                        <div class="team-card-detail" title="${venue}">${venue}</div>
+                        <div class="btn-squad">Effectif ➔</div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Erreur équipes :', error);
+            }
+        }
+
+        fetchTeams();
+    </script>
+
+</body>
+</html>

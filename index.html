@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PITCHBOARD - Live Score Ligue 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        /* Header & Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: #ffffff;
+            padding: 10px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .site-logo {
+            height: 44px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .site-logo:hover {
+            transform: scale(1.04);
+        }
+
+        .site-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        nav.main-nav {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+            gap: 4px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            padding: 8px 18px;
+            border-radius: 9px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: #64748b;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #0f172a;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .nav-link.active {
+            background: #ffffff;
+            color: #2563eb;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+        }
+
+        .nav-link.active svg {
+            fill: #2563eb;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(220, 252, 231, 0.8);
+            border: 1px solid rgba(187, 247, 208, 0.8);
+            color: #16a34a;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .pulse {
+            width: 7px;
+            height: 7px;
+            background-color: #16a34a;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.5); }
+            70% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+        }
+
+        /* KPIs */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 14px 18px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kpi-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kpi-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .kpi-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kpi-subtext {
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .kpi-team-crest {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        /* Organisation en 3 colonnes */
+        .dashboard-grid-3col {
+            display: grid;
+            grid-template-columns: 320px 1fr 300px;
+            gap: 15px;
+            align-items: start;
+            width: 100%;
+        }
+
+        @media (max-width: 1100px) {
+            .dashboard-grid-3col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .card-header {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 0.88rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-color: #f1f5f9;
+        }
+
+        /* Conteneur analyse compact avec scroll */
+        .analysis-content {
+            padding: 12px 14px;
+            font-size: 0.8rem;
+            color: var(--text);
+            line-height: 1.4;
+            max-height: 190px;
+            overflow-y: auto;
+        }
+
+        .analysis-content p {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .analysis-quote {
+            margin-bottom: 0;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            border-left: 3px solid var(--accent);
+            padding-left: 8px;
+            font-style: italic;
+        }
+
+        /* Matchs de la journée */
+        .match-list { 
+            padding: 4px 10px; 
+        }
+        .match-item {
+            display: flex;
+            flex-direction: column;
+            padding: 5px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .match-item:last-child { border-bottom: none; }
+        .match-info-top {
+            display: flex;
+            justify-content: center;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+        .match-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .team-side {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            width: 38%;
+        }
+        .team-side.away {
+            justify-content: flex-end;
+            text-align: right;
+        }
+        .team-logo {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+        .team-name {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .match-score-box {
+            background: #f1f5f9;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            min-width: 32px;
+            text-align: center;
+        }
+        .status-live { color: var(--danger); font-weight: 700; text-transform: uppercase; }
+        .status-finished { color: var(--text-muted); font-weight: 500; }
+        .status-upcoming { color: var(--accent); font-weight: 600; }
+
+        /* Fil d'Actualité RSS RMC */
+        .news-list { 
+            padding: 4px 12px; 
+            max-height: 380px; 
+            overflow-y: auto; 
+        }
+        .news-item {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .news-item:last-child { border-bottom: none; }
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.65rem;
+        }
+        .news-time { color: var(--accent); font-weight: 700; }
+        .news-tag {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.6rem;
+        }
+        .news-title {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--primary);
+            line-height: 1.3;
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+        .news-title:hover { 
+            color: var(--accent); 
+            text-decoration: underline;
+        }
+
+        /* Classement & Effet Hover */
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 5px 6px; font-size: 0.72rem; }
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+        th.th-team { text-align: left; }
+        
+        tbody tr {
+            transition: background-color 0.15s ease, transform 0.1s ease;
+            cursor: pointer;
+        }
+        tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border); }
+        
+        tbody tr:hover {
+            filter: brightness(0.96);
+            box-shadow: inset 2px 0 0 var(--accent);
+        }
+
+        .pos { font-weight: 700; text-align: center; width: 20px; color: var(--primary); }
+        .team-cell { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--primary); }
+        .stat { text-align: center; color: var(--text); }
+        .diff { text-align: center; font-weight: 600; }
+        .pts { font-weight: 800; color: var(--danger); text-align: center; background: rgba(0,0,0,0.02); }
+
+        .zone-champions { background-color: #fef08a !important; }
+        .zone-champions-qualif { background-color: #bbf7d0 !important; }
+        .zone-europa { background-color: #bfdbfe !important; }
+        .zone-conference { background-color: #e9d5ff !important; }
+        .zone-barrage { background-color: #fbcfe8 !important; }
+        .zone-relegation { background-color: #fecaca !important; }
+
+        .legend-container {
+            padding: 8px 12px;
+            font-size: 0.65rem;
+            background-color: #fafafa;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-muted); }
+        .legend-box { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+        /* Widgets Stats */
+        .stat-widget-card { background: var(--card-bg) !important; border: 1px solid var(--border) !important; border-radius: 12px; overflow: hidden; }
+        .stat-widget-header {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 800;
+            padding: 10px 14px;
+            color: var(--primary);
+            background: #f1f5f9;
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+        }
+        .stat-leader-banner {
+            position: relative;
+            height: 90px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .leader-rank {
+            position: absolute;
+            left: 12px;
+            bottom: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 1.3rem;
+            color: #ffffff;
+            opacity: 0.9;
+        }
+        .leader-crest { height: 60px; width: 60px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)); }
+        .stat-leader-bar { background: #ffffff; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .leader-bar-info { display: flex; align-items: center; gap: 8px; }
+        .small-crest { width: 20px; height: 20px; object-fit: contain; }
+        .leader-team-name { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 0.82rem; color: var(--primary); text-transform: uppercase; }
+        .stat-badge-main { background: #eff6ff; color: var(--accent); border: 1px solid #bfdbfe; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 0.88rem; padding: 2px 8px; border-radius: 5px; }
+        .stat-rank-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: #ffffff; border-bottom: 1px solid var(--border); }
+        .stat-rank-item:last-child { border-bottom: none; }
+        .stat-rank-item:nth-child(even) { background: #f8fafc; }
+        .rank-left { display: flex; align-items: center; gap: 8px; }
+        .rank-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 0.8rem; color: var(--text-muted); width: 12px; }
+        .rank-team-name { font-weight: 600; font-size: 0.78rem; color: var(--primary); }
+        .rank-val { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.82rem; color: var(--primary); }
+
+        .form-badge {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            margin-right: 2px;
+        }
+        .form-v { background: #dcfce7; color: #16a34a; }
+        .form-n { background: #e0f2fe; color: #0284c7; }
+        .form-d { background: #fee2e2; color: #dc2626; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-brand">
+            <img src="logo.jpg" alt="PITCHBOARD Logo" class="site-logo">
+            <h1 class="site-title">PITCHBOARD</h1>
+        </div>
+
+        <div class="header-right">
+            <nav class="main-nav">
+                <a href="/" class="nav-link active">
+                    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/schedule" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+                    <span>Calendrier</span>
+                </a>
+                <a href="/teams" class="nav-link">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span>Équipes</span>
+                </a>
+            </nav>
+
+            <div class="live-badge">
+                <div class="pulse"></div>
+                <span>En direct (30s)</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-info">
+                <span class="kpi-title">Meilleure Attaque</span>
+                <span class="kpi-value" id="top-attack-team">--</span>
+                <span class="kpi-subtext" id="top-attack-goals">-- buts marqués</span>
+            </div>
+            <div>
+                <img id="top-attack-crest" src="" alt="" class="kpi-team-crest" style="display: none;">
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-info">
+                <span class="kpi-title">Meilleur Buteur</span>
+                <span class="kpi-value" id="top-scorer-name">--</span>
+                <span class="kpi-subtext" id="top-scorer-goals">-- buts</span>
+            </div>
+            <div>
+                <img id="top-scorer-crest" src="" alt="" class="kpi-team-crest" style="display: none;">
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-info">
+                <span class="kpi-title">Meilleure Défense</span>
+                <span class="kpi-value" id="top-defense-team">--</span>
+                <span class="kpi-subtext" id="top-defense-goals">-- buts encaissés</span>
+            </div>
+            <div>
+                <img id="top-defense-crest" src="" alt="" class="kpi-team-crest" style="display: none;">
+            </div>
+        </div>
+    </div>
+
+    <!-- GRILLE À 3 COLONNES -->
+    <div class="dashboard-grid-3col">
+        <!-- COLONNE 1 (GAUCHE) : MATCHS DE LA JOURNÉE & FIL D'ACTUALITÉ -->
+        <div class="column-left">
+            <div class="card">
+                <div class="card-header" id="matches-header">Matchs de la journée</div>
+                <div class="match-list" id="matches-container">
+                    <p style="text-align: center; color: var(--text-muted); padding: 12px; font-size: 0.8rem;">Chargement des matchs...</p>
+                </div>
+            </div>
+
+            <!-- FIL D'ACTUALITÉ AUTOMATIQUE RMC SPORT -->
+            <div class="card">
+                <div class="card-header">⚡ Fil d'actualité RMC Sport</div>
+                <div class="news-list" id="news-container">
+                    <p style="text-align: center; color: var(--text-muted); padding: 12px; font-size: 0.8rem;">Chargement des actualités...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLONNE 2 (CENTRE) : ANALYSE DE LA SEMAINE + CLASSEMENT OFFICIEL LIGUE 1 -->
+        <div class="column-standings">
+            <!-- ENCADRÉ ANALYSE DE LA SEMAINE (OM vs Lille) -->
+            <div class="card">
+                <div class="card-header">🔍 Analyse de la Semaine : OM vs Lille, le choc des paradoxes</div>
+                <div class="analysis-content">
+                    <p>
+                        Le classement oppose brutalement le <strong>LOSC (2e, 13 pts)</strong> à l'<strong>OM (13e, 6 pts)</strong>. Pourtant, offensivement, les deux équipes affichent un bilan identique : <strong>9 buts marqués</strong>, nourris par des volumes de tirs (71 vs 69) et des xG jumeaux (9,37 vs 9,31).
+                    </p>
+                    <p>
+                        Alors pourquoi un tel gouffre au classement ? La réponse tient en deux chiffres : la précision et la rigueur défensive.
+                    </p>
+                    <p>
+                        D'un côté, Lille cadre <strong>48 % de ses frappes (1er de L1)</strong> et verrouille sa défense avec seulement <strong>4 buts encaissés</strong>. De l'autre, l'OM gâche (<strong>37 % de tirs cadrés</strong>), subit une possession stérile (58 %) et prend l'eau derrière avec <strong>8 buts pris</strong>.
+                    </p>
+                    <p>
+                        Entre l'efficacité clinique lilloise et la fébrilité marseillaise, le ballon a choisi son camp.
+                    </p>
+                    <div class="analysis-quote">
+                        « 9 buts partout, mais 4 encaissés pour Lille contre 8 pour l'OM : l'équilibre des Nordistes face aux largesses phocéennes. » — <strong>La rédaction</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CLASSEMENT -->
+            <div class="card">
+                <div class="card-header">Classement Officiel Ligue 1</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="pos">P</th>
+                            <th class="th-team">Équipe</th>
+                            <th class="pts">Pts</th>
+                            <th class="stat">J</th>
+                            <th class="stat">G</th>
+                            <th class="stat">N</th>
+                            <th class="stat">P</th>
+                            <th class="stat">Bp</th>
+                            <th class="stat">Bc</th>
+                            <th class="diff">Diff</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standings-body">
+                        <tr><td colspan="10" style="text-align: center; padding: 12px; color: var(--text-muted); font-size: 0.8rem;">Chargement du classement...</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="legend-container">
+                    <div class="legend-item"><span class="legend-box" style="background: #fef08a;"></span> Places 1 à 3 : Qualification Ligue des Champions</div>
+                    <div class="legend-item"><span class="legend-box" style="background: #bbf7d0;"></span> Place 4 : 3e tour de qualification LdC</div>
+                    <div class="legend-item"><span class="legend-box" style="background: #bfdbfe;"></span> Place 5 : Qualification Ligue Europa</div>
+                    <div class="legend-item"><span class="legend-box" style="background: #e9d5ff;"></span> Place 6 : Barrages Ligue Conférence</div>
+                    <div class="legend-item"><span class="legend-box" style="background: #fbcfe8;"></span> Place 16 : Barrage de relégation</div>
+                    <div class="legend-item"><span class="legend-box" style="background: #fecaca;"></span> Places 17 à 18 : Relégation directe en Ligue 2</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLONNE 3 (DROITE) : WIDGETS DE STATS -->
+        <div class="column-widgets">
+            <!-- Widget Possession -->
+            <div class="card stat-widget-card">
+                <div class="stat-widget-header">Possession Moyenne</div>
+                <div class="stat-leader-banner">
+                    <div class="leader-rank">1ER</div>
+                    <img src="" alt="" class="leader-crest" id="possession-leader-crest">
+                </div>
+                <div class="stat-leader-bar">
+                    <div class="leader-bar-info">
+                        <img src="" alt="" class="small-crest" id="possession-leader-small-crest">
+                        <span class="leader-team-name" id="possession-leader-name">--</span>
+                    </div>
+                    <div class="stat-badge-main" id="possession-leader-val">--%</div>
+                </div>
+                <div id="possession-rank-list"></div>
+            </div>
+
+            <!-- Widget Forme du Moment (Calculé dynamiquement) -->
+            <div class="card stat-widget-card">
+                <div class="stat-widget-header">Forme du Moment</div>
+                <div class="stat-leader-banner" style="background: linear-gradient(135deg, #16a34a 0%, #065f46 100%);">
+                    <div class="leader-rank">1ER</div>
+                    <img src="" alt="" class="leader-crest" id="form-leader-crest">
+                </div>
+                <div class="stat-leader-bar">
+                    <div class="leader-bar-info">
+                        <img src="" alt="" class="small-crest" id="form-leader-small-crest">
+                        <span class="leader-team-name" id="form-leader-name">--</span>
+                    </div>
+                    <div class="stat-badge-main" id="form-leader-val" style="background: transparent; border: none; padding: 0;">--</div>
+                </div>
+                <div id="form-rank-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cachedTable = [];
+        let cachedMatches = [];
+
+        const possessionData = [
+            { rank: 1, name: 'Paris Saint-Germain', value: '66 %', crest: 'https://crests.football-data.org/524.png' },
+            { rank: 2, name: 'OGC Nice', value: '57 %', crest: 'https://crests.football-data.org/522.png' },
+            { rank: 3, name: 'Olympique de Marseille', value: '57 %', crest: 'https://crests.football-data.org/516.png' }
+        ];
+
+        function renderPossessionWidget() {
+            if (!possessionData || possessionData.length === 0) return;
+            const leader = possessionData[0];
+            document.getElementById('possession-leader-crest').src = leader.crest;
+            document.getElementById('possession-leader-small-crest').src = leader.crest;
+            document.getElementById('possession-leader-name').innerText = leader.name;
+            document.getElementById('possession-leader-val').innerText = leader.value;
+
+            const listContainer = document.getElementById('possession-rank-list');
+            listContainer.innerHTML = '';
+            possessionData.slice(1).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'stat-rank-item';
+                div.innerHTML = `
+                    <div class="rank-left">
+                        <span class="rank-num">${item.rank}</span>
+                        <img src="${item.crest}" class="small-crest" alt="">
+                        <span class="rank-team-name">${item.name}</span>
+                    </div>
+                    <span class="rank-val">${item.value}</span>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        // Calcul dynamique de la forme à partir des vrais matchs terminés
+        function processFormWidget() {
+            if (cachedTable.length === 0 || cachedMatches.length === 0) return;
+
+            let teamForms = {};
+            cachedTable.forEach(row => {
+                teamForms[row.team.id] = {
+                    name: row.team.shortName || row.team.name,
+                    crest: row.team.crest,
+                    results: []
+                };
+            });
+
+            const finishedMatches = cachedMatches
+                .filter(m => m.status === 'FINISHED')
+                .sort((a, b) => new Date(b.utcDate) - new Date(a.utcDate));
+
+            finishedMatches.forEach(m => {
+                const homeId = m.homeTeam.id;
+                const awayId = m.awayTeam.id;
+                const homeScore = m.score?.fullTime?.home;
+                const awayScore = m.score?.fullTime?.away;
+
+                if (homeScore !== null && awayScore !== null) {
+                    if (teamForms[homeId] && teamForms[homeId].results.length < 5) {
+                        if (homeScore > awayScore) teamForms[homeId].results.push('V');
+                        else if (homeScore === awayScore) teamForms[homeId].results.push('N');
+                        else teamForms[homeId].results.push('D');
+                    }
+                    if (teamForms[awayId] && teamForms[awayId].results.length < 5) {
+                        if (awayScore > homeScore) teamForms[awayId].results.push('V');
+                        else if (awayScore === homeScore) teamForms[awayId].results.push('N');
+                        else teamForms[awayId].results.push('D');
+                    }
+                }
+            });
+
+            let formArray = Object.keys(teamForms).map(id => {
+                const res = teamForms[id].results;
+                while(res.length < 5) res.push('N');
+                const points = res.reduce((acc, curr) => acc + (curr === 'V' ? 3 : (curr === 'N' ? 1 : 0)), 0);
+                return {
+                    name: teamForms[id].name,
+                    crest: teamForms[id].crest,
+                    form: [...res].reverse(),
+                    points: points
+                };
+            });
+
+            formArray.sort((a, b) => b.points - a.points);
+            if (formArray.length === 0) return;
+
+            const leader = formArray[0];
+            document.getElementById('form-leader-crest').src = leader.crest;
+            document.getElementById('form-leader-small-crest').src = leader.crest;
+            document.getElementById('form-leader-name').innerText = leader.name;
+            document.getElementById('form-leader-val').innerHTML = formatFormHTMLDirect(leader.form);
+
+            const listContainer = document.getElementById('form-rank-list');
+            listContainer.innerHTML = '';
+            formArray.slice(1, 3).forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = 'stat-rank-item';
+                div.innerHTML = `
+                    <div class="rank-left">
+                        <span class="rank-num">${idx + 2}</span>
+                        <img src="${item.crest}" class="small-crest" alt="">
+                        <span class="rank-team-name">${item.name}</span>
+                    </div>
+                    <div>${formatFormHTMLDirect(item.form)}</div>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        function formatFormHTMLDirect(formArray) {
+            let html = '';
+            formArray.forEach(char => {
+                if (char === 'V') html += '<span class="form-badge form-v">V</span>';
+                else if (char === 'N') html += '<span class="form-badge form-n">N</span>';
+                else if (char === 'D') html += '<span class="form-badge form-d">D</span>';
+            });
+            return html;
+        }
+
+        async function fetchScorers() {
+            try {
+                const response = await fetch('/api/scorers');
+                if (!response.ok) return;
+                const data = await response.json();
+                if (data.scorers && data.scorers.length > 0) {
+                    const topScorer = data.scorers[0];
+                    document.getElementById('top-scorer-name').innerText = topScorer.player.name;
+                    document.getElementById('top-scorer-goals').innerText = topScorer.goals + " buts";
+                    if (topScorer.team && topScorer.team.crest) {
+                        const crestImg = document.getElementById('top-scorer-crest');
+                        crestImg.src = topScorer.team.crest;
+                        crestImg.style.display = 'block';
+                    }
+                }
+            } catch (e) {
+                console.error("Erreur chargement buteurs", e);
+            }
+        }
+
+        async function fetchStandingsAndStats() {
+            try {
+                const response = await fetch('/api/standings');
+                if (!response.ok) return;
+                const data = await response.json();
+                cachedTable = data.standings && data.standings[0] ? data.standings[0].table : [];
+                
+                let tbody = document.getElementById('standings-body');
+                tbody.innerHTML = '';
+
+                let bestAttack = null;
+                let bestDefense = null;
+
+                cachedTable.forEach((row) => {
+                    if (!bestAttack || row.goalsFor > bestAttack.goalsFor) bestAttack = row;
+                    if (!bestDefense || row.goalsAgainst < bestDefense.goalsAgainst) bestDefense = row;
+
+                    let zoneClass = '';
+                    if (row.position <= 3) zoneClass = 'zone-champions';
+                    else if (row.position === 4) zoneClass = 'zone-champions-qualif';
+                    else if (row.position === 5) zoneClass = 'zone-europa';
+                    else if (row.position === 6) zoneClass = 'zone-conference';
+                    else if (row.position === 16) zoneClass = 'zone-barrage';
+                    else if (row.position >= 17) zoneClass = 'zone-relegation';
+
+                    const tr = document.createElement('tr');
+                    tr.className = zoneClass;
+                    tr.innerHTML = `
+                        <td class="pos">${row.position}</td>
+                        <td class="team-cell">
+                            <img src="${row.team.crest}" class="team-logo" alt="">
+                            <span>${row.team.shortName || row.team.name}</span>
+                        </td>
+                        <td class="pts">${row.points}</td>
+                        <td class="stat">${row.playedGames}</td>
+                        <td class="stat">${row.won}</td>
+                        <td class="stat">${row.draw}</td>
+                        <td class="stat">${row.lost}</td>
+                        <td class="stat">${row.goalsFor}</td>
+                        <td class="stat">${row.goalsAgainst}</td>
+                        <td class="diff">${row.goalDifference > 0 ? '+' + row.goalDifference : row.goalDifference}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                if (bestAttack) {
+                    document.getElementById('top-attack-team').innerText = bestAttack.team.shortName || bestAttack.team.name;
+                    document.getElementById('top-attack-goals').innerText = bestAttack.goalsFor + " buts marqués";
+                    const crest = document.getElementById('top-attack-crest');
+                    crest.src = bestAttack.team.crest;
+                    crest.style.display = 'block';
+                }
+
+                if (bestDefense) {
+                    document.getElementById('top-defense-team').innerText = bestDefense.team.shortName || bestDefense.team.name;
+                    document.getElementById('top-defense-goals').innerText = bestDefense.goalsAgainst + " buts encaissés";
+                    const crest = document.getElementById('top-defense-crest');
+                    crest.src = bestDefense.team.crest;
+                    crest.style.display = 'block';
+                }
+
+                processFormWidget();
+
+            } catch (e) {
+                console.error("Erreur chargement classement", e);
+            }
+        }
+
+        async function fetchMatches() {
+            try {
+                const response = await fetch('/api/matches');
+                if (!response.ok) return;
+                const data = await response.json();
+                cachedMatches = data.matches || [];
+                const container = document.getElementById('matches-container');
+                container.innerHTML = '';
+
+                if (cachedMatches.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; padding:10px; font-size:0.8rem;">Aucun match trouvé.</p>';
+                    return;
+                }
+
+                let currentMatchday = cachedMatches[0].matchday;
+                const upcoming = cachedMatches.find(m => m.status === 'TIMED' || m.status === 'SCHEDULED' || m.status === 'LIVE' || m.status === 'IN_PLAY');
+                if (upcoming) {
+                    currentMatchday = upcoming.matchday;
+                }
+
+                const dayMatches = cachedMatches.filter(m => m.matchday === currentMatchday);
+                document.getElementById('matches-header').innerText = `Matchs de la journée ${currentMatchday}`;
+
+                dayMatches.forEach(m => {
+                    const date = new Date(m.utcDate).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+                    let statusHTML = '';
+                    let scoreHome = m.score?.fullTime?.home ?? '-';
+                    let scoreAway = m.score?.fullTime?.away ?? '-';
+
+                    if (m.status === 'LIVE' || m.status === 'IN_PLAY') {
+                        statusHTML = `<span class="status-live">LIVE</span>`;
+                    } else if (m.status === 'FINISHED') {
+                        statusHTML = `<span class="status-finished">${scoreHome} - ${scoreAway}</span>`;
+                    } else {
+                        statusHTML = `<span class="status-upcoming">${date}</span>`;
+                    }
+
+                    const div = document.createElement('div');
+                    div.className = 'match-item';
+                    div.innerHTML = `
+                        <div class="match-info-top">
+                            <span>${statusHTML}</span>
+                        </div>
+                        <div class="match-details">
+                            <div class="team-side">
+                                <img src="${m.homeTeam.crest || ''}" class="team-logo" alt="">
+                                <span class="team-name">${m.homeTeam.shortName || m.homeTeam.name}</span>
+                            </div>
+                            <div class="match-score-box">${m.status === 'FINISHED' || m.status === 'LIVE' ? `${scoreHome} -${scoreAway}` : 'VS'}</div>
+                            <div class="team-side away">
+                                <span class="team-name">${m.awayTeam.shortName || m.awayTeam.name}</span>
+                                <img src="${m.awayTeam.crest || ''}" class="team-logo" alt="">
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+
+                processFormWidget();
+
+            } catch (e) {
+                console.error("Erreur chargement des matchs", e);
+            }
+        }
+
+        // Flux RSS RMC Sport en temps réel
+        async function loadNews() {
+            const newsContainer = document.getElementById('news-container');
+            const rmcRssUrl = encodeURIComponent('https://rmcsport.bfmtv.com/rss/football/ligue-1/');
+            
+            try {
+                const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rmcRssUrl}`);
+                if (!response.ok) throw new Error("Erreur RSS RMC");
+                const data = await response.json();
+                
+                if (data.items && data.items.length > 0) {
+                    newsContainer.innerHTML = '';
+                    data.items.slice(0, 6).forEach(item => {
+                        const pubDate = new Date(item.pubDate);
+                        const diffMinutes = Math.round((new Date() - pubDate) / (1000 * 60));
+                        let timeStr = `Il y a ${diffMinutes} min`;
+                        if (diffMinutes >= 60) {
+                            timeStr = `Il y a ${Math.round(diffMinutes / 60)} h`;
+                        }
+
+                        const div = document.createElement('div');
+                        div.className = 'news-item';
+                        div.innerHTML = `
+                            <div class="news-meta">
+                                <span class="news-time">${timeStr}</span>
+                                <span class="news-tag">RMC SPORT</span>
+                            </div>
+                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-title">${item.title}</a>
+                        `;
+                        newsContainer.appendChild(div);
+                    });
+                } else {
+                    throw new Error("Aucune actualité retournée");
+                }
+            } catch (e) {
+                console.error("Erreur chargement RSS RMC", e);
+                newsContainer.innerHTML = `
+                    <div class="news-item">
+                        <div class="news-meta"><span class="news-time">RMC Sport</span><span class="news-tag">DIRECT</span></div>
+                        <a href="https://rmcsport.bfmtv.com/football/ligue-1/" target="_blank" rel="noopener noreferrer" class="news-title">Accéder au fil d'actualité Ligue 1 en direct sur RMC Sport.</a>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPossessionWidget();
+            loadNews();
+            fetchStandingsAndStats();
+            fetchScorers();
+            fetchMatches();
+        });
+    </script>
+</body>
+</html>
