@@ -213,15 +213,14 @@ app.get('/api/headtohead', async (req, res) => {
 });
 // Routes pour tes pages HTML spécifiques
 app.get('/teams', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'teams.html'));
+    res.sendFile(path.join(__dirname, 'teams.html'));
 });
-
 app.get('/team', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'team.html'));
+    res.sendFile(path.join(__dirname, 'team.html'));
 });
 
 app.get('/schedule', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'schedule.html'));
+    res.sendFile(path.join(__dirname, 'schedule.html'));
 });
 
 app.listen(PORT, () => {
