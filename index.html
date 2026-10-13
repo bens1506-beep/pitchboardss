@@ -882,64 +882,72 @@
                 if (!response.ok) return;
                 const data = await response.json();
                 cachedMatches = data.matches || [];
+
+                // On cherche la journée active (par défaut currentMatchday ou la première journée avec des matchs à venir)
+                let currentMatchday = data.resultSet?.season?.currentMatchday || 6;
+                
+                // Filtrer les matchs de cette journée
+                const dayMatches = cachedMatches.filter(m => m.season?.currentMatchday === currentMatchday || m.matchday === currentMatchday);
+                
+                // S'il n'y en a pas, on prend les premiers matchs non joués ou les plus récents
+                const matchesToShow = dayMatches.length > 0 ? dayMatches : cachedMatches.slice(0, 10);
+
+                document.getElementById('matches-header').innerText = `Matchs de la journée ${currentMatchday}`;
                 const container = document.getElementById('matches-container');
                 container.innerHTML = '';
 
-                if (cachedMatches.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; padding:10px; font-size:0.8rem;">Aucun match trouvé.</p>';
-                    return;
-                }
-
-                let currentMatchday = cachedMatches[0].matchday;
-                const upcoming = cachedMatches.find(m => m.status === 'TIMED' || m.status === 'SCHEDULED' || m.status === 'LIVE' || m.status === 'IN_PLAY');
-                if (upcoming) {
-                    currentMatchday = upcoming.matchday;
-                }
-
-                const dayMatches = cachedMatches.filter(m => m.matchday === currentMatchday);
-                document.getElementById('matches-header').innerText = `Matchs de la journée ${currentMatchday}`;
-
-                dayMatches.forEach(m => {
-                    const date = new Date(m.utcDate).toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-                    let statusHTML = '';
-                    let scoreHome = m.score?.fullTime?.home ?? '-';
-                    let scoreAway = m.score?.fullTime?.away ?? '-';
-
-                    if (m.status === 'LIVE' || m.status === 'IN_PLAY') {
-                        statusHTML = `<span class="status-live">LIVE</span>`;
-                    } else if (m.status === 'FINISHED') {
-                        statusHTML = `<span class="status-finished">${scoreHome} - ${scoreAway}</span>`;
-                    } else {
-                        statusHTML = `<span class="status-upcoming">${date}</span>`;
+                matchesToShow.forEach(m => {
+                    const homeName = m.homeTeam.shortName || m.homeTeam.name;
+                    const awayName = m.awayTeam.shortName || m.awayTeam.name;
+                    const homeCrest = m.homeTeam.crest || '';
+                    const awayCrest = m.awayTeam.crest || '';
+                    
+                    const homeScore = m.score?.fullTime?.home !== null ? m.score.fullTime.home : '-';
+                    const awayScore = m.score?.fullTime?.away !== null ? m.score.fullTime.away : '-';
+                    
+                    let statusClass = 'status-upcoming';
+                    let statusText = new Date(m.utcDate).toLocaleDateString('fr-FR', { weekday: 'short', hour: '2-digit', minute: '2-digit' });
+                    
+                    if (m.status === 'FINISHED') {
+                        statusClass = 'status-finished';
+                        statusText = 'Terminé';
+                    } else if (m.status === 'IN_PLAY' || m.status === 'PAUSED') {
+                        statusClass = 'status-live';
+                        statusText = 'En direct';
                     }
 
                     const div = document.createElement('div');
                     div.className = 'match-item';
                     div.innerHTML = `
-                        <div class="match-info-top">
-                            <span>${statusHTML}</span>
-                        </div>
+                        <div class="match-info-top"><span class="${statusClass}">${statusText}</span></div>
                         <div class="match-details">
                             <div class="team-side">
-                                <img src="${m.homeTeam.crest || ''}" class="team-logo" alt="">
-                                <span class="team-name">${m.homeTeam.shortName || m.homeTeam.name}</span>
+                                <img src="${homeCrest}" class="team-logo" alt="">
+                                <span class="team-name" title="${homeName}">${homeName}</span>
                             </div>
-                            <div class="match-score-box">${m.status === 'FINISHED' || m.status === 'LIVE' ? `${scoreHome} -${scoreAway}` : 'VS'}</div>
+                            <div class="match-score-box">${homeScore} - ${awayScore}</div>
                             <div class="team-side away">
-                                <span class="team-name">${m.awayTeam.shortName || m.awayTeam.name}</span>
-                                <img src="${m.awayTeam.crest || ''}" class="team-logo" alt="">
+                                <span class="team-name" title="${awayName}">${awayName}</span>
+                                <img src="${awayCrest}" class="team-logo" alt="">
                             </div>
                         </div>
                     `;
                     container.appendChild(div);
                 });
-
-                processFormWidget();
-
-            } catch (e) {
-                console.error("Erreur chargement des matchs", e);
+            } catch (error) {
+                console.error('Erreur chargement matchs :', error);
             }
         }
+
+        // Lancement des fonctions au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchScorers();
+            fetchMatches();
+            renderPossessionWidget();
+        });
+    </script>
+</body>
+</html>
 
         // Flux RSS RMC Sport en temps réel
         async function loadNews() {
