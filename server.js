@@ -14,7 +14,12 @@ const parser = new Parser({
 const FOOTBALL_DATA_API_KEY = process.env.FOOTBALL_DATA_API_KEY || 'e69838debdd944ce98f16a61295e0305';
 const BASE_URL = 'https://api.football-data.org/v4';
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
+
+// Route de base explicite pour la page d'accueil
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 const apiHeaders = {
     'X-Auth-Token': FOOTBALL_DATA_API_KEY
